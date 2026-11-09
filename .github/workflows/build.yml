@@ -1,0 +1,71 @@
+name: Build HomeLibrary (Windows and Linux)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    name: Windows Portable
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-build.txt
+      - name: Syntax check
+        run: python -m compileall -q app.py catalog_groups.py markdown_converter.py metadata_engine.py ocr_language.py photo_book_converter.py
+      - name: Build Windows EXE
+        shell: pwsh
+        run: |
+          python -m PyInstaller --noconfirm --clean --onedir --windowed --name HomeLibrary --add-data "index.html;." --add-data "assets;assets" --hidden-import tkinter --collect-submodules fitz --collect-submodules PIL --collect-submodules openpyxl --hidden-import markdown_converter --hidden-import ocr_language --hidden-import photo_book_converter --hidden-import reportlab --collect-submodules reportlab app.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          foreach ($folder in @("data","downloads","covers","previews","attachments")) { New-Item -ItemType Directory -Force -Path "dist/HomeLibrary/$folder" | Out-Null }
+          Compress-Archive -Path dist/HomeLibrary -DestinationPath HomeLibrary-Windows-x64-Portable.zip -Force
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HomeLibrary-Windows-x64-Portable
+          path: HomeLibrary-Windows-x64-Portable.zip
+          if-no-files-found: error
+
+  linux:
+    name: Linux Portable and AppImage
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-tk libfuse2
+      - name: Syntax check
+        run: python -m compileall -q app.py catalog_groups.py markdown_converter.py metadata_engine.py ocr_language.py photo_book_converter.py
+      - name: Download AppImage tooling
+        run: |
+          curl --fail --location --retry 3 -o /tmp/appimagetool.AppImage https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x /tmp/appimagetool.AppImage
+          printf '#!/bin/sh\nexec /tmp/appimagetool.AppImage --appimage-extract-and-run "$@"\n' > /tmp/appimagetool
+          chmod +x /tmp/appimagetool
+          echo "/tmp" >> "$GITHUB_PATH"
+      - name: Build Linux Portable and AppImage
+        run: bash build_linux.sh --appimage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HomeLibrary-Linux-x86_64
+          path: |
+            release/*.tar.gz
+            release/*.AppImage
+          if-no-files-found: error
