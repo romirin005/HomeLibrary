@@ -1,0 +1,4 @@
+#!/bin/sh
+HERE="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+export HOME_LIBRARY_DATA_DIR="${HOME_LIBRARY_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/HomeLibrary}"
+exec "$HERE/usr/bin/HomeLibrary/HomeLibrary" "$@"

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Домашняя библиотека
+Name[en]=Home Library
+Comment=Локальный каталог и читалка книг
+Exec=HomeLibrary
+Icon=homelibrary
+Terminal=false
+Categories=Office;Education;
