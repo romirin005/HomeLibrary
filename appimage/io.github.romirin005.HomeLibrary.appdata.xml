@@ -4,7 +4,7 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-only</project_license>
   <name>HomeLibrary</name>
-  <summary>Локальная библиотека электронных книг</summary>
+  <summary>HomeLibrary — локальная библиотека электронных книг</summary>
   <description>
     <p>HomeLibrary помогает каталогизировать, искать и читать электронные книги, а также преобразовывать документы в Markdown и JSON для локального использования.</p>
   </description>
@@ -21,6 +21,7 @@
       <image>https://raw.githubusercontent.com/romirin005/HomeLibrary/main/docs/screenshots/karta.png</image>
     </screenshot>
   </screenshots>
+  <content_rating type="oars-1.1"/>
   <releases>
     <release version="2.7.0" date="2026-11-09"/>
   </releases>
