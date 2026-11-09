@@ -121,6 +121,6 @@ jobs:
           gh release create "${TAG}" \
             release-assets/*.zip release-assets/*.tar.gz release-assets/*.AppImage release-assets/SHA256SUMS.txt \
             --repo "${GITHUB_REPOSITORY}" \
-            --title "HomeLibrary ${GITHUB_REF_NAME}" \
+            --title "HomeLibrary ${TAG}" \
             --notes-file RELEASE_NOTES.md \
             --verify-tag
