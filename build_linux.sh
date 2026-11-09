@@ -21,13 +21,18 @@ rm -rf AppDir
 mkdir -p AppDir/usr/bin
 cp -a dist/HomeLibrary AppDir/usr/bin/HomeLibrary
 cp appimage/AppRun AppDir/AppRun
-cp appimage/HomeLibrary.desktop AppDir/HomeLibrary.desktop
+cp appimage/io.github.romirin005.HomeLibrary.desktop AppDir/io.github.romirin005.HomeLibrary.desktop
+mkdir -p AppDir/usr/share/metainfo
+cp appimage/io.github.romirin005.HomeLibrary.metainfo.xml AppDir/usr/share/metainfo/io.github.romirin005.HomeLibrary.metainfo.xml
 cp assets/beekeeper.png AppDir/homelibrary.png
 chmod +x AppDir/AppRun
 if ! command -v appimagetool >/dev/null 2>&1; then
  echo 'Не найден appimagetool. Скачайте официальный appimagetool для вашей архитектуры, сделайте исполняемым и добавьте в PATH.'
  echo 'Подготовленный каталог AppDir сохранён; Portable уже собран.'
  exit 3
+fi
+if command -v appstreamcli >/dev/null 2>&1; then
+  appstreamcli validate --no-net AppDir/usr/share/metainfo/io.github.romirin005.HomeLibrary.metainfo.xml || echo "WARNING: AppStream metadata validation returned diagnostics"
 fi
 ARCH="$ARCH" appimagetool AppDir "release/HomeLibrary-v2.7-${ARCH}.AppImage"
 echo 'AppImage готов в release/'
