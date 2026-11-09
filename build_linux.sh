@@ -21,8 +21,9 @@ rm -rf AppDir
 mkdir -p AppDir/usr/bin
 cp -a dist/HomeLibrary AppDir/usr/bin/HomeLibrary
 cp appimage/AppRun AppDir/AppRun
-cp appimage/io.github.romirin005.HomeLibrary.desktop AppDir/io.github.romirin005.HomeLibrary.desktop
-mkdir -p AppDir/usr/share/metainfo
+mkdir -p AppDir/usr/share/applications AppDir/usr/share/metainfo
+cp appimage/io.github.romirin005.HomeLibrary.desktop AppDir/usr/share/applications/io.github.romirin005.HomeLibrary.desktop
+ln -s usr/share/applications/io.github.romirin005.HomeLibrary.desktop AppDir/io.github.romirin005.HomeLibrary.desktop
 cp appimage/io.github.romirin005.HomeLibrary.appdata.xml AppDir/usr/share/metainfo/io.github.romirin005.HomeLibrary.appdata.xml
 cp assets/beekeeper.png AppDir/homelibrary.png
 chmod +x AppDir/AppRun
@@ -32,7 +33,7 @@ if ! command -v appimagetool >/dev/null 2>&1; then
  exit 3
 fi
 if command -v appstreamcli >/dev/null 2>&1; then
-  appstreamcli validate --no-net AppDir/usr/share/metainfo/io.github.romirin005.HomeLibrary.appdata.xml || echo "WARNING: AppStream metadata validation returned diagnostics"
+  appstreamcli validate-tree --no-net AppDir
 fi
 ARCH="$ARCH" appimagetool AppDir "release/HomeLibrary-v2.7-${ARCH}.AppImage"
 echo 'AppImage готов в release/'
