@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+build/
+dist/
+*.spec
+.pytest_cache/
+# Personal library and generated artifacts
+data/
+books/
+library/
+backups/
+exports/
+output/
+cache/
+*.db
+*.sqlite
+*.sqlite3
+*.zip
+*.pdf
+*.djvu
+*.epub
+*.fb2
+*.mobi
+*.azw3
+# Secrets and local settings
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+Thumbs.db
