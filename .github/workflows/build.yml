@@ -16,8 +16,8 @@ jobs:
     name: Windows Portable
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
       - name: Install dependencies
@@ -33,7 +33,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           foreach ($folder in @("data","downloads","covers","previews","attachments")) { New-Item -ItemType Directory -Force -Path "dist/HomeLibrary/$folder" | Out-Null }
           Compress-Archive -Path dist/HomeLibrary -DestinationPath HomeLibrary-Windows-x64-Portable.zip -Force
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: HomeLibrary-Windows-x64-Portable
           path: HomeLibrary-Windows-x64-Portable.zip
@@ -43,14 +43,14 @@ jobs:
     name: Linux Portable and AppImage
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-tk libfuse2
+          sudo apt-get install -y python3-tk libfuse2 appstream
       - name: Syntax check
         run: python -m compileall -q app.py catalog_groups.py markdown_converter.py metadata_engine.py ocr_language.py photo_book_converter.py
       - name: Download AppImage tooling
@@ -62,7 +62,7 @@ jobs:
           echo "/tmp" >> "$GITHUB_PATH"
       - name: Build Linux Portable and AppImage
         run: bash build_linux.sh --appimage
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: HomeLibrary-Linux-x86_64
           path: |
