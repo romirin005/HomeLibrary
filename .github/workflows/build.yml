@@ -53,15 +53,28 @@ jobs:
           sudo apt-get install -y python3-tk libfuse2 appstream
       - name: Syntax check
         run: python -m compileall -q app.py catalog_groups.py markdown_converter.py metadata_engine.py ocr_language.py photo_book_converter.py
-      - name: Download AppImage tooling
+      - name: Build Linux Portable
+        run: bash build_linux.sh
+      - name: Download AppImage tooling (best effort)
+        id: appimage_tool
+        continue-on-error: true
         run: |
-          curl --fail --location --retry 3 -o /tmp/appimagetool.AppImage https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          set -euo pipefail
+          curl --fail --location --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 15 --max-time 120 \
+            -o /tmp/appimagetool.AppImage \
+            https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          test -s /tmp/appimagetool.AppImage
           chmod +x /tmp/appimagetool.AppImage
           printf '#!/bin/sh\nexec /tmp/appimagetool.AppImage --appimage-extract-and-run "$@"\n' > /tmp/appimagetool
           chmod +x /tmp/appimagetool
           echo "/tmp" >> "$GITHUB_PATH"
-      - name: Build Linux Portable and AppImage
-        run: bash build_linux.sh --appimage
+      - name: Build AppImage (if tool available)
+        if: steps.appimage_tool.outcome == 'success'
+        run: |
+          bash build_linux.sh --appimage
+      - name: Note AppImage download failure
+        if: steps.appimage_tool.outcome != 'success'
+        run: echo "::warning::AppImage utility download unavailable. Linux Portable archive was built and will be uploaded."
       - uses: actions/upload-artifact@v6
         with:
           name: HomeLibrary-Linux-x86_64
