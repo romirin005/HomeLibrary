@@ -14,13 +14,14 @@
 
 ## Скриншоты
 
-Добавьте изображения интерфейса в `docs/screenshots/` и замените примеры ниже реальными файлами:
+### Каталог книг
+![Каталог книг](docs/screenshots/katalog.png)
 
-<!-- После загрузки изображений можно раскомментировать:
-![Каталог книг](docs/screenshots/catalog.png)
-![Карточка книги](docs/screenshots/book-card.png)
-![Markdown и RAG](docs/screenshots/markdown-rag.png)
--->
+### Карточка книги
+![Карточка книги](docs/screenshots/karta.png)
+
+### Конвертер Markdown / RAG
+![Конвертер Markdown / RAG](docs/screenshots/markdwn.png)
 
 ## Запуск из исходников
 
